@@ -559,7 +559,7 @@ class _Parser(object):
           self._ConvertMapFieldValue(value, message, field)
         elif field.label == descriptor.FieldDescriptor.LABEL_REPEATED:
           message.ClearField(field.name)
-          if not isinstance(value, list):
+          if not isinstance(value, (list, tuple)):
             raise ParseError('repeated field {0} must be in [] which is '
                              '{1}.'.format(name, value))
           if field.cpp_type == descriptor.FieldDescriptor.CPPTYPE_MESSAGE:
@@ -640,7 +640,7 @@ class _Parser(object):
     """Convert a JSON representation into Value message."""
     if isinstance(value, dict):
       self._ConvertStructMessage(value, message.struct_value)
-    elif isinstance(value, list):
+    elif isinstance(value, (list, tuple)):
       self. _ConvertListValueMessage(value, message.list_value)
     elif value is None:
       message.null_value = 0
@@ -656,7 +656,7 @@ class _Parser(object):
 
   def _ConvertListValueMessage(self, value, message):
     """Convert a JSON representation into ListValue message."""
-    if not isinstance(value, list):
+    if not isinstance(value, (list, tuple)):
       raise ParseError(
           'ListValue must be in [] which is {0}.'.format(value))
     message.ClearField('values')
